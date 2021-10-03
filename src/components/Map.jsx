@@ -15,14 +15,14 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 export const Map = () => {
   const { state } = useStateMachine();
-  const { mu_type } = state;
+  const { mu_type, year } = state;
 
   const { isLoading, error, data } = useQuery(["samples", mu_type], () =>
-    getSamples(mu_type)
+    getSamples(mu_type, year)
   );
 
   const useDistinctQuery = () =>
-    useQuery(["samples", mu_type], () => getSamples(mu_type), {
+    useQuery(["samples", mu_type, year], () => getSamples(mu_type, year), {
       select: React.useCallback((data) => {
         const distinct = {};
         data.forEach((sam) => {

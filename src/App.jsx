@@ -18,6 +18,7 @@ const queryClient = new QueryClient({
 });
 
 createStore({
+  year: 2010,
   mu_type: "qma",
 });
 

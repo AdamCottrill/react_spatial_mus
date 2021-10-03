@@ -1,4 +1,4 @@
-export const updateMuType = (state, payload) => {
+export const updateState = (state, payload) => {
   return {
     ...state,
     ...payload,

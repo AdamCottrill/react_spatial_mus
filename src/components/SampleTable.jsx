@@ -8,10 +8,10 @@ import { MyTable } from "./MyTable";
 
 export const SampleTable = (props) => {
   const { state } = useStateMachine();
-  const { mu_type } = state;
+  const { mu_type, year } = state;
 
-  const { isLoading, error, data } = useQuery(["samples", mu_type], () =>
-    getSamples(mu_type)
+  const { isLoading, error, data } = useQuery(["samples", mu_type, year], () =>
+    getSamples(mu_type, year)
   );
 
   const [tableData, setTableData] = useState(null);
