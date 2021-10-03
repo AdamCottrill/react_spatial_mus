@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.21.4",
+    "little-state-machine": "^4.1.2",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-map-gl": "^6.1.17",

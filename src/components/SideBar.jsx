@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
-
+import { useStateMachine } from "little-state-machine";
 import { getMuTypes } from "../services/api";
+
+import { updateMuType } from "../Actions";
 
 import { Spinner } from "./Spinner";
 import { Alert } from "./Alert";
@@ -9,7 +11,7 @@ import { Alert } from "./Alert";
 export const SideBar = (props) => {
   const { isLoading, error, data } = useQuery("mutypes", getMuTypes);
 
-  const [selected, setSelected] = useState("mu");
+  const { actions, state } = useStateMachine({ updateMuType });
 
   if (isLoading) return <Spinner />;
 
@@ -17,8 +19,6 @@ export const SideBar = (props) => {
 
   return (
     <>
-      <p>{selected}</p>
-
       <div className="card mx-2">
         <div className="card-header">Label Samples with:</div>
         <div className="card-body">
@@ -30,8 +30,8 @@ export const SideBar = (props) => {
                   type="radio"
                   name="mu-type"
                   id="{mu.abbrev}"
-                  checked={mu.abbrev === selected}
-                  onChange={() => setSelected(mu.abbrev)}
+                  checked={mu.abbrev === state.mu_type}
+                  onChange={() => actions.updateMuType({ mu_type: mu.abbrev })}
                 />
                 <label className="form-check-label" htmlFor="{mu.abbrev}">
                   {mu.label}

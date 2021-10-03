@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-
+import { useStateMachine } from "little-state-machine";
 import { getSamples } from "../services/api";
 import { Spinner } from "./Spinner";
 import { Alert } from "./Alert";
 import { MyTable } from "./MyTable";
 
 export const SampleTable = (props) => {
-  const mu_type = "ltrz";
+  const { state } = useStateMachine();
+  const { mu_type } = state;
 
   const { isLoading, error, data } = useQuery(["samples", mu_type], () =>
     getSamples(mu_type)
