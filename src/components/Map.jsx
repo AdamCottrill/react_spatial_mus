@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import ReactMapGL, { Marker } from "react-map-gl";
-import { WebMercatorViewport } from "react-map-gl";
+import ReactMapGL, { WebMercatorViewport, SVGOverlay } from "react-map-gl";
 import { useQuery } from "react-query";
 import { useStateMachine } from "little-state-machine";
 
@@ -21,6 +20,21 @@ export const Map = () => {
     getSamples(mu_type, year)
   );
 
+  const wmViewport = new WebMercatorViewport({
+    width: 1000,
+    height: 800,
+  }).fitBounds(
+    [
+      [-84.7395009724404, 43.0008239366142],
+      [-79.6546709677048, 46.3322449429032],
+    ],
+    {
+      padding: 10,
+    }
+  );
+
+  const [viewport, setViewport] = useState(wmViewport);
+
   const useDistinctQuery = () =>
     useQuery(["samples", mu_type, year], () => getSamples(mu_type, year), {
       select: React.useCallback((data) => {
@@ -39,7 +53,7 @@ export const Map = () => {
 
   const pts = useDistinctQuery();
 
-  const makeMarkers = (pts) => {
+  function redraw({ project }) {
     let myMarkers = [];
     let mus2 = [];
     const fillMap = {};
@@ -56,51 +70,32 @@ export const Map = () => {
       });
 
       for (const [key, val] of Object.entries(pts.data)) {
+        const [cx, cy] = project([val.dd_lon, val.dd_lat]);
+
         myMarkers.push(
-          <Marker key={key} longitude={val.dd_lon} latitude={val.dd_lat}>
-            <div>
-              <svg>
-                <circle
-                  cx="5"
-                  cy="5"
-                  r="5"
-                  fill={fillMap[val.mu]}
-                  stroke="black"
-                  opacity="0.3"
-                />
-              </svg>
-            </div>
-          </Marker>
+          <circle
+            key={key}
+            cx={cx}
+            cy={cy}
+            r={4}
+            stroke="black"
+            opacity="0.3"
+            fill={fillMap[val.mu]}
+          />
         );
       }
     }
     return myMarkers;
-  };
-
-  const markers2 = React.useMemo(() => makeMarkers(pts), [pts]);
-
-  const defaults = new WebMercatorViewport({
-    width: 1000,
-    height: 800,
-  }).fitBounds(
-    [
-      [-84.7395009724404, 43.0008239366142],
-      [-79.6546709677048, 46.3322449429032],
-    ],
-    {
-      padding: 10,
-    }
-  );
-
-  const [viewport, setViewport] = useState(defaults);
+  }
 
   return (
     <ReactMapGL
       {...viewport}
+      //onClick={(e) => console.log("e.lngLat = ", e.lngLat)}
       mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
     >
-      {data && markers2}
+      <SVGOverlay redraw={redraw} />
     </ReactMapGL>
   );
 };

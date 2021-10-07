@@ -6,7 +6,7 @@ import { Spinner } from "./Spinner";
 import { Alert } from "./Alert";
 import { MyTable } from "./MyTable";
 
-export const SampleTable = (props) => {
+export const SampleTable = () => {
   const { state } = useStateMachine();
   const { mu_type, year } = state;
 

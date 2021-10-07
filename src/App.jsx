@@ -1,11 +1,12 @@
-import { useState } from "react";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { StateMachineProvider, createStore } from "little-state-machine";
 import "./App.css";
 
-import { Map } from "./components/Map";
-import { SideBar } from "./components/SideBar";
-import { SampleTable } from "./components/SampleTable";
+import { MapPage } from "./pages/Map";
+import { Samples } from "./pages/Samples";
+import { MapModal } from "./pages/MapModal";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,19 +27,29 @@ function App() {
   return (
     <StateMachineProvider>
       <QueryClientProvider client={queryClient}>
-        <div className="row my-3">
-          <h1>Spatial Management Units</h1>
-        </div>
-        <div className="row">
-          <div className="col-md-3">
-            <h3>SideBar</h3>
-            <SideBar />
+        <Router>
+          <div className="row my-3 px-3">
+            <div className="col-md-8">
+              <h1>Spatial Management Units</h1>
+            </div>
+            <div className="col-md-4 d-flex justify-content-around">
+              <Link to="/">Map</Link>
+              <Link to="/samples">Samples</Link>
+              <Link to="/modal">Modal Map</Link>
+            </div>
           </div>
-          <div className="col-md-9">
-            <Map />
-            <SampleTable />
-          </div>
-        </div>
+          <Switch>
+            <Route path="/samples">
+              <Samples />
+            </Route>
+            <Route path="/modal">
+              <MapModal />
+            </Route>
+            <Route path="/">
+              <MapPage />
+            </Route>
+          </Switch>
+        </Router>
       </QueryClientProvider>
     </StateMachineProvider>
   );
