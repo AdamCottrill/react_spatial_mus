@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 
-import ReactMapGL, { WebMercatorViewport, Marker } from "react-map-gl";
+import ReactMapGL, { WebMercatorViewport, Popup } from "react-map-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
-export const PointMap = ({ points, height, width }) => {
+export const PointMap = ({
+  markers,
+  height,
+  width,
+  popupInfo,
+  setPopupInfo,
+}) => {
   const wmViewport = new WebMercatorViewport({
     width: width,
     height: height,
@@ -20,25 +26,6 @@ export const PointMap = ({ points, height, width }) => {
 
   const [viewport, setViewport] = useState(wmViewport);
 
-  const markers = (points) => {
-    return points.map(([lon, lat]) => {
-      return (
-        <Marker key={`${lon}-${lat}`} longitude={lon} latitude={lat}>
-          <svg width="12" height="14" transform="translate(-5,-11)">
-            <circle
-              cx={4}
-              cy={4}
-              r={4}
-              opacity="0.5"
-              stroke="black"
-              fill="red"
-            />
-          </svg>
-        </Marker>
-      );
-    });
-  };
-
   return (
     <>
       <ReactMapGL
@@ -46,7 +33,22 @@ export const PointMap = ({ points, height, width }) => {
         mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
       >
-        {markers(points)}
+        {markers}
+
+        {popupInfo && (
+          <Popup
+            tipSize={5}
+            anchor="top"
+            longitude={popupInfo.dd_lon}
+            latitude={popupInfo.dd_lat}
+            closeOnClick={false}
+            onClose={setPopupInfo}
+          >
+            <div>
+              {popupInfo.space} - {popupInfo.space_des}
+            </div>
+          </Popup>
+        )}
       </ReactMapGL>
     </>
   );
