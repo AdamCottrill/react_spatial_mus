@@ -1,0 +1,9 @@
+* Spatial_mus
+
+  Spatial_mus is a react front end to a Django application of the same
+  name.  The django application provides an api that returns point
+  data with a dynamically specified spatial attribute.  The react
+  application provides a means of changing the desired management unit
+  and displaying the results on an interactive map.  These
+  applications are really nothing more than sandboxes that serve as
+  proof of concepts.
