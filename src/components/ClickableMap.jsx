@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 
-import ReactMapGL, { WebMercatorViewport } from "react-map-gl";
+import ReactMapGL, {
+  WebMercatorViewport,
+  NavigationControl,
+} from "react-map-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { MyMarker } from "./MyMarker";
 
 export const ClickableMap = ({ point, setPoint }) => {
+  const navStyle = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    padding: "10px",
+  };
+
   const wmViewport = new WebMercatorViewport({
     width: 1000,
     height: 800,
@@ -26,7 +36,7 @@ export const ClickableMap = ({ point, setPoint }) => {
     const [lon, lat] = point;
     if (lon && lat) {
       //const [cx, cy] = project([lon, lat]);
-      return <MyMarker lon={lon} lat={lat} />;
+      return <MyMarker lon={lon} lat={lat} onClick={() => {}} />;
     } else {
       return null;
     }
@@ -42,6 +52,9 @@ export const ClickableMap = ({ point, setPoint }) => {
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
       >
         {marker(point)}
+        <div className="nav" style={navStyle}>
+          <NavigationControl />
+        </div>
       </ReactMapGL>
     </>
   );
